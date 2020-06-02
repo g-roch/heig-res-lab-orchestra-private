@@ -20,7 +20,7 @@ echo "*** Deleting our 3 Docker images, if they exist"
 echo ""
 docker rmi res/auditor
 docker rmi res/musician
-docker rmi res/validate-music
+#docker rmi res/validate-music
 	
 #
 # ... and rebuild them
