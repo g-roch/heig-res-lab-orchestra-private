@@ -16,9 +16,10 @@ client.on('listening', function () {
 client.on('message', function(message, remote) {
 	var elems = String(message).split(':')
 	if (elems[0] in data) {
-		data[remote.address]['activeLast'] = new Date()
+		data[elems[0]]['instrument'] = elems[1]
+		data[elems[0]]['activeLast'] = new Date()
 	} else {
-		data[remote.address] = {
+		data[elems[0]] = {
 			uuid: elems[0],
 			instrument: elems[1],
 			activeSince: new Date(),
@@ -33,7 +34,7 @@ client.bind(port)
 var net = require('net')
 var server = net.createServer( function(socket) {
 	var d = []
-	for (let [ip, val] of Object.entries(data)) {
+	for (let [uuid, val] of Object.entries(data)) {
 		if (new Date() - val['activeLast'] < 1000 * 5) {
 			var v = val
 			d.push({
@@ -41,6 +42,8 @@ var server = net.createServer( function(socket) {
 				instrument: val['instrument'],
 				activeSince: val['activeSince'],
 			})
+		} else {
+			delete data[uuid]
 		}
 	}
 	socket.write(JSON.stringify(d))
