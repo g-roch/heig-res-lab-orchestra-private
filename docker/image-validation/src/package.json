@@ -9,9 +9,9 @@
   "author": "Olivier Liechti",
   "license": "ISC",
   "dependencies": {
-    "async": "^2.0.0-rc.4",
-    "chai": "^3.5.0",
-    "chance": "^1.0.3",
-    "dockerode": "^2.2.10"
+    "async": "2.0.0-rc.4",
+    "chai": "3.5.0",
+    "chance": "1.0.3",
+    "dockerode": "2.2.10"
   }
 }
