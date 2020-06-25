@@ -112,13 +112,13 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 |Question | How can we represent the system in an **architecture diagram**, which gives information both about the Docker containers, the communication protocols and the commands? |
 | | ![image-20200605155933264](images/image-20200605155933264.png) |
 |Question | Who is going to **send UDP datagrams** and **when**? |
-| | Musician, every second to multicast IP 230.185.192.108 |
+| | Musicians send a message  every second to multicast address : 230.185.192.108 |
 |Question | Who is going to **listen for UDP datagrams** and what should happen when a datagram is received? |
-| | Auditor subscribe to multicast ip (230.185.192.108) and update array when receive a message. |
+| | Auditor subscribes to the multicast address (230.185.192.108) and update array when a message is received. |
 |Question | What **payload** should we put in the UDP datagrams? |
 | | `uuid:instrument:sound` |
 |Question | What **data structures** do we need in the UDP sender and receiver? When will we update these data structures? When will we query these data structures? |
-| | For musician is never updated.<br />For auditor, update data array when receive datagram (update last view date).<br />array format : <br />   `data[uuid]["uuid"] = uuid`<br />   `data[uuid]["instrument"] = instrument`<br />   `data[uuid]["activeSince"] = DateTime of first view`<br />   `data[uuid]["activeLast"] = DateTime of last view` |
+| |The musicians never update their data structure.<br />The auditor updates the data structure for every datagram he receives (update last view date).<br />array format : <br />   `data[uuid]["uuid"] = uuid`<br />   `data[uuid]["instrument"] = instrument`<br />   `data[uuid]["activeSince"] = DateTime of first view`<br />   `data[uuid]["activeLast"] = DateTime of last view` |
 
 
 ## Task 2: implement a "musician" Node.js application
@@ -126,19 +126,19 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic |
 | ---  | --- |
 |Question | In a JavaScript program, if we have an object, how can we **serialize it in JSON**? |
-| | `JSON.stringify(object)` |
+| | We have to use : `JSON.stringify(object)` |
 |Question | What is **npm**?  |
-| | Package manager for `node.js` |
+| | npm is a Package manager for `node.js`.  |
 |Question | What is the `npm install` command and what is the purpose of the `--save` flag?  |
-| | Install dependence in current directory.<br />`--save` : save dependencies in `package.json` |
+| | Install dependence in the current directory.<br />The flag `--save` saves dependencies in a `package.json` |
 |Question | How can we use the `https://www.npmjs.com/` web site?  |
-| | With web browser.<br />It's for searching and getting information about a npm packages (Description, License, Authors, Documentation, ...) |
+| | With web browser.<br />On this website we can search and get information about a npm package (Description, License, Authors, Documentation, ...) |
 |Question | In JavaScript, how can we **generate a UUID** compliant with RFC4122? |
-| | uuidv4 from package `uuid` |
+| | We have to install the `uuid` package and use `uuidv4` |
 |Question | In Node.js, how can we execute a function on a **periodic** basis? |
-| | With function `setInterval()` |
+| | We have to use the javascript function `setInterval()` |
 |0Question | In Node.js, how can we **emit UDP datagrams**? |
-| | With `dgram` package, create a socket with `udp4` type. |
+| | We have to install the `dgram`, create a socket with `udp4` type. |
 |Question | In Node.js, how can we **access the command line arguments**? |
 | | With `process.argv` array |
 
@@ -148,17 +148,17 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic |
 | ---  | --- |
 |Question | How do we **define and build our own Docker image**?|
-| | With a custom `Dockerfile` |
+| | We have to create a custom `Dockerfile` |
 |Question | How can we use the `ENTRYPOINT` statement in our Dockerfile?  |
-| | `ENTRYPOINT ["node", "/opt/app/app.js"]`<br />`CMD ["piano"]`<br />"Entrypoint" define command to execute when docker image is started. "CMD" define argument passed to entrypoint command. If image is run with argument, this argument replace CMD argument. |
+| | `ENTRYPOINT ["node", "/opt/app/app.js"]`<br />`CMD ["piano"]`<br />"Entrypoint" defines command to execute when a docker image is started. "CMD" define the argument passed to entrypoint command. If an image is run with argument, this argument replace CMD argument. |
 |Question | After building our Docker image, how do we use it to **run containers**?  |
-| | `docker run -d res/musician <instrumentName>` |
+| | We have to use `docker run -d res/musician <instrumentName>` |
 |Question | How do we get the list of all **running containers**?  |
-| | `docker ps` |
+| | We have to use `docker ps` |
 |Question | How do we **stop/kill** one running container?  |
-| | `docker kill <containerIdOrName>` |
+| | We have to use `docker kill <containerIdOrName>` |
 |Question | How can we check that our running containers are effectively sending UDP datagrams?  |
-| | On linux: Open wireshark on interface `docker0`. |
+| | On linux, we can open wireshark and listen on interface `docker0`. |
 
 
 ## Task 4: implement an "auditor" Node.js application
@@ -166,15 +166,15 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic |
 | ---  | ---  |
 |Question | With Node.js, how can we listen for UDP datagrams in a multicast group? |
-| | With `dgram` package, create a socket with `udp4` type and call `addMembership(<multicastIP>)` function |
+| | We have to install the pacakge `dgram`, create a socket with `udp4` type and call the javascript function `addMembership(<multicastIP>)`  |
 |Question | How can we use the `Map` built-in object introduced in ECMAScript 6 to implement a **dictionary**?  |
 | | `a = new Map()`<br />and<br />`a.set(<key>, <value>)`<br />`a.get(<key>)` |
 |Question | How can we use the `Moment.js` npm module to help us with **date manipulations** and formatting?  |
-|  | It's a good package, but to store and calculate difference of 2 date, it isn't necessary. |
+|  | `Moment.js` is a package for using date in a pretty format, but for this projet we didn't need it. Because we are just stocking the date and soustract two of them |
 |Question | When and how do we **get rid of inactive players**?  |
-| | Remove entry when detect is too old. |
+| | An player is inactive if he didn't play his instrument for 5 seconds. If the auditor didn't hear anymore, he will remove from the list |
 |Question | How do I implement a **simple TCP server** in Node.js?  |
-| | With `net` package, create a server. |
+| | We have to install the package `net` and create a server. |
 
 
 ## Task 5: package the "auditor" app in a Docker image
