@@ -7,30 +7,17 @@ var uuid = uuidv4()
 var instrument = ""
 var sound = ""
 instrument = process.argv[2]
-switch(instrument) {
-	case "piano":
-		sound = "ti-ta-ti"
-		break
-	case "trumpet":
-		sound = "pouet"
-		break
-	case "flute":
-		sound = "trulu"
-		break
-	case "violin":
-		sound = "gzi-gzi"
-		break
-	case "drum":
-		sound = "boum-boum"
-		break
-	default:
-		instrument = "piano"
-		sound = "ti-ta-ti"
-		break
+const instrumentMap = {
+	'piano':'ti-ta-ti',
+	'trumpet':'pouet',
+	'flute':'flute',
+	'violin':'gzi-gzi',
+	'drum':'boum-boum'
 }
+sound = instrumentMap[instrument];
 var message = uuid+":"+instrument+":"+sound
 server.bind(port, function() {
-	server.setBroadcast(true)
+
 	server.setMulticastTTL(128)
 	server.addMembership(mcast_addr)
 })
